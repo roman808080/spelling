@@ -42,5 +42,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::handleButton()
 {
-    //
+    if (!moduleWindow)
+    {
+        moduleWindow.reset(new QWidget);
+        moduleWindow->show();
+    }
 }

@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QWidget>
+
 #include <memory>
 
 QT_BEGIN_NAMESPACE
@@ -23,5 +25,6 @@ public slots:
 
 private:
     std::unique_ptr<Ui::MainWindow> ui;
+    std::unique_ptr<QWidget> moduleWindow;
 };
 #endif // MAINWINDOW_H
