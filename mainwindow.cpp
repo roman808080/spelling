@@ -44,7 +44,7 @@ void MainWindow::handleButton()
 {
     if (!moduleWindow)
     {
-        moduleWindow.reset(new QWidget);
+        moduleWindow.reset(new ModuleDialog);
         moduleWindow->show();
     }
 }

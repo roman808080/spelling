@@ -1,8 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "moduledialog.h"
+
 #include <QMainWindow>
-#include <QWidget>
 
 #include <memory>
 
@@ -25,6 +26,6 @@ public slots:
 
 private:
     std::unique_ptr<Ui::MainWindow> ui;
-    std::unique_ptr<QWidget> moduleWindow;
+    std::unique_ptr<ModuleDialog> moduleWindow;
 };
 #endif // MAINWINDOW_H
