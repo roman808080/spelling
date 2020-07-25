@@ -16,7 +16,10 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    virtual ~MainWindow();
+
+public slots:
+    void handleButton();
 
 private:
     std::unique_ptr<Ui::MainWindow> ui;

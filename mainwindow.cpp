@@ -32,8 +32,15 @@ MainWindow::MainWindow(QWidget *parent)
     {
         ui->lessons->addItem(key);
     }
+
+    connect(ui->goButton, &QPushButton::clicked, this, &MainWindow::handleButton);
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::handleButton()
+{
+    //
 }
