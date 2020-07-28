@@ -10,5 +10,4 @@ ModuleDialog::ModuleDialog(QWidget *parent) :
 
 ModuleDialog::~ModuleDialog()
 {
-    delete ui;
 }

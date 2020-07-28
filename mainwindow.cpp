@@ -42,7 +42,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::handleButton()
 {
-    if (!moduleWindow)
+    if (!moduleWindow or !moduleWindow->isVisible())
     {
         moduleWindow.reset(new ModuleDialog);
         moduleWindow->show();

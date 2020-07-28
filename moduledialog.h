@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include <memory>
+
 namespace Ui {
 class ModuleDialog;
 }
@@ -16,7 +18,7 @@ public:
     ~ModuleDialog();
 
 private:
-    Ui::ModuleDialog *ui;
+    std::unique_ptr<Ui::ModuleDialog> ui;
 };
 
 #endif // MODULEDIALOG_H
