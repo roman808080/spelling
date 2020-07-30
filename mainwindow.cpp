@@ -5,9 +5,8 @@
 #include <QDir>
 #include <QFile>
 #include <QJsonDocument>
-#include <QJsonObject>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -23,12 +22,12 @@ MainWindow::MainWindow(QWidget *parent)
     file.close();
 
     auto jsonDocument = QJsonDocument::fromJson(bytes);
-    auto jsonObject = jsonDocument.object();
+    moduleJsonObject = std::make_shared<QJsonObject>(jsonDocument.object());
 
     ui->setupUi(this);
 
     ui->lessons->clear();
-    for (const auto& key: jsonObject.keys())
+    for (const auto& key: moduleJsonObject->keys())
     {
         ui->lessons->addItem(key);
     }
@@ -44,7 +43,11 @@ void MainWindow::handleButton()
 {
     if (!moduleWindow or !moduleWindow->isVisible())
     {
-        moduleWindow.reset(new ModuleDialog);
+        int numberOfCurrentRow = ui->lessons->currentRow();
+        auto row = ui->lessons->item(numberOfCurrentRow);
+        auto key = row->text();
+
+        moduleWindow.reset(new ModuleDialog(key.toStdString(), moduleJsonObject));
         moduleWindow->show();
     }
 }

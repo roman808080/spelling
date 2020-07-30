@@ -4,6 +4,7 @@
 #include "moduledialog.h"
 
 #include <QMainWindow>
+#include <QJsonObject>
 
 #include <memory>
 
@@ -27,5 +28,6 @@ public slots:
 private:
     std::unique_ptr<Ui::MainWindow> ui;
     std::unique_ptr<ModuleDialog> moduleWindow;
+    std::shared_ptr<QJsonObject> moduleJsonObject;
 };
 #endif // MAINWINDOW_H
