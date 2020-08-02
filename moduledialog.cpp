@@ -2,6 +2,8 @@
 #include "ui_moduledialog.h"
 
 #include <QMediaPlayer>
+#include <QString>
+#include <QJsonArray>
 
 namespace
 {
@@ -34,7 +36,10 @@ ModuleDialog::~ModuleDialog()
 
 void ModuleDialog::handlePlayButton()
 {
-    player->setMedia(QUrl::fromLocalFile(audioPath.path() + QDir::separator() + "audio/uk_social.mp3"));
+    auto module = jsonObject->take(QString::fromStdString(key)).toArray();
+    auto ukAudioPath = module[0].toObject().take("uk_audio").toString();
+
+    player->setMedia(QUrl::fromLocalFile(audioPath.path() + QDir::separator() + ukAudioPath));
     player->setVolume(kVolume);
     player->play();
 }
