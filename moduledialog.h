@@ -34,6 +34,7 @@ private:
     std::unique_ptr<QMediaPlayer> player;
 
     QDir audioPath;
+    int currentWord;
 };
 
 #endif // MODULEDIALOG_H

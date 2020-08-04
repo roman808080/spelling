@@ -17,7 +17,8 @@ ModuleDialog::ModuleDialog(const std::string& key,
     ui(new Ui::ModuleDialog),
     key(key),
     jsonObject(jsonObject),
-    player(new QMediaPlayer)
+    player(new QMediaPlayer),
+    currentWord(0)
 {
     ui->setupUi(this);
     this->setWindowTitle(QString::fromStdString(key));
@@ -36,10 +37,18 @@ ModuleDialog::~ModuleDialog()
 
 void ModuleDialog::handlePlayButton()
 {
-    auto module = jsonObject->take(QString::fromStdString(key)).toArray();
-    auto ukAudioPath = module[0].toObject().take("uk_audio").toString();
+    auto module = jsonObject->value(QString::fromStdString(key)).toArray();
+    if (module.size() == 0 or
+        currentWord > module.size())
+    {
+        return;
+    }
+
+    auto ukAudioPath = module[currentWord].toObject().value("uk_audio").toString();
 
     player->setMedia(QUrl::fromLocalFile(audioPath.path() + QDir::separator() + ukAudioPath));
     player->setVolume(kVolume);
     player->play();
+
+    ++currentWord;
 }
