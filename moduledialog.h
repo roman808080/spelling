@@ -26,6 +26,9 @@ public:
 
 public slots:
     void handlePlayButton();
+    void handleNextButton();
+    void handleBackButton();
+    void handleAnswerButton();
 
 private:
     std::unique_ptr<Ui::ModuleDialog> ui;

@@ -29,6 +29,11 @@ ModuleDialog::ModuleDialog(const std::string& key,
                      "default" + QDir::separator());
 
     connect(ui->playButton, &QPushButton::clicked, this, &ModuleDialog::handlePlayButton);
+    connect(ui->nextButton, &QPushButton::clicked, this, &ModuleDialog::handleNextButton);
+    connect(ui->backButton, &QPushButton::clicked, this, &ModuleDialog::handleBackButton);
+    connect(ui->answerButton, &QPushButton::clicked, this, &ModuleDialog::handleAnswerButton);
+
+    handlePlayButton();
 }
 
 ModuleDialog::~ModuleDialog()
@@ -39,7 +44,7 @@ void ModuleDialog::handlePlayButton()
 {
     auto module = jsonObject->value(QString::fromStdString(key)).toArray();
     if (module.size() == 0 or
-        currentWord > module.size())
+        currentWord >= module.size())
     {
         return;
     }
@@ -49,6 +54,44 @@ void ModuleDialog::handlePlayButton()
     player->setMedia(QUrl::fromLocalFile(audioPath.path() + QDir::separator() + ukAudioPath));
     player->setVolume(kVolume);
     player->play();
+}
+
+void ModuleDialog::handleNextButton()
+{
+    auto module = jsonObject->value(QString::fromStdString(key)).toArray();
+    if (currentWord >= module.size())
+    {
+
+    }
 
     ++currentWord;
+    handlePlayButton();
+    ui->answerLabel->setText("");
+    ui->answerText->clear();
+}
+
+void ModuleDialog::handleBackButton()
+{
+    if (currentWord <= 0)
+    {
+        return;
+    }
+
+    --currentWord;
+    handlePlayButton();
+    ui->answerLabel->setText("");
+    ui->answerText->clear();
+}
+
+void ModuleDialog::handleAnswerButton()
+{
+    auto module = jsonObject->value(QString::fromStdString(key)).toArray();
+    if (module.size() == 0 or
+        currentWord >= module.size())
+    {
+        return;
+    }
+
+    auto answer = module[currentWord].toObject().value("expression").toString();
+    ui->answerLabel->setText(answer);
 }
