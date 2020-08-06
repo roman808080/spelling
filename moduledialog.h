@@ -2,7 +2,7 @@
 #define MODULEDIALOG_H
 
 #include <QDialog>
-#include <QJsonObject>
+#include <QJsonArray>
 #include <QDir>
 
 #include <memory>
@@ -33,11 +33,13 @@ public slots:
 private:
     void switchWord(int step);
     bool isWordOutOfScope();
+    void clearAnswer();
 
 private:
     std::unique_ptr<Ui::ModuleDialog> ui;
     std::string key;
-    std::shared_ptr<QJsonObject> jsonObject;
+
+    QJsonArray module;
     std::unique_ptr<QMediaPlayer> player;
 
     QDir audioPath;

@@ -3,6 +3,7 @@
 
 #include <QMediaPlayer>
 #include <QString>
+#include <QJsonObject>
 #include <QJsonArray>
 
 namespace
@@ -18,7 +19,6 @@ ModuleDialog::ModuleDialog(const std::string& key,
     QDialog(parent),
     ui(new Ui::ModuleDialog),
     key(key),
-    jsonObject(jsonObject),
     player(new QMediaPlayer),
     currentWord(0)
 {
@@ -30,12 +30,15 @@ ModuleDialog::ModuleDialog(const std::string& key,
                      "modules" + QDir::separator() +
                      "default" + QDir::separator());
 
+    module = jsonObject->value(QString::fromStdString(key)).toArray();
+
     connect(ui->playButton, &QPushButton::clicked, this, &ModuleDialog::playCurrentWord);
     connect(ui->nextButton, &QPushButton::clicked, this, &ModuleDialog::switchToNextWord);
     connect(ui->backButton, &QPushButton::clicked, this, &ModuleDialog::switchToPreviousWorld);
     connect(ui->answerButton, &QPushButton::clicked, this, &ModuleDialog::showAnswer);
 
     playCurrentWord();
+    clearAnswer();
 }
 
 ModuleDialog::~ModuleDialog()
@@ -44,9 +47,7 @@ ModuleDialog::~ModuleDialog()
 
 void ModuleDialog::playCurrentWord()
 {
-    auto module = jsonObject->value(QString::fromStdString(key)).toArray();
-    if (module.size() == 0 or
-        currentWord >= module.size())
+    if (isWordOutOfScope())
     {
         return;
     }
@@ -70,9 +71,7 @@ void ModuleDialog::switchToPreviousWorld()
 
 void ModuleDialog::showAnswer()
 {
-    auto module = jsonObject->value(QString::fromStdString(key)).toArray();
-    if (module.size() == 0 or
-        currentWord >= module.size())
+    if (isWordOutOfScope())
     {
         return;
     }
@@ -84,20 +83,23 @@ void ModuleDialog::showAnswer()
 void ModuleDialog::switchWord(int step)
 {
     currentWord += step;
-
-    auto module = jsonObject->value(QString::fromStdString(key)).toArray();
-    if (currentWord >= module.size() or
-        currentWord < 0)
+    if (isWordOutOfScope())
     {
         return;
     }
 
     playCurrentWord();
-    ui->answerLabel->setText("");
-    ui->answerText->clear();
+    clearAnswer();
 }
 
 bool ModuleDialog::isWordOutOfScope()
 {
-    return false;
+    return currentWord >= module.size() or
+           currentWord < 0;
+}
+
+void ModuleDialog::clearAnswer()
+{
+    ui->answerLabel->setText("");
+    ui->answerText->clear();
 }
