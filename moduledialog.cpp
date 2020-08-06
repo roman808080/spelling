@@ -8,6 +8,8 @@
 namespace
 {
     const int kVolume = 50;
+    const int kBack = -1;
+    const int kNext = 1;
 }
 
 ModuleDialog::ModuleDialog(const std::string& key,
@@ -28,19 +30,19 @@ ModuleDialog::ModuleDialog(const std::string& key,
                      "modules" + QDir::separator() +
                      "default" + QDir::separator());
 
-    connect(ui->playButton, &QPushButton::clicked, this, &ModuleDialog::handlePlayButton);
-    connect(ui->nextButton, &QPushButton::clicked, this, &ModuleDialog::handleNextButton);
-    connect(ui->backButton, &QPushButton::clicked, this, &ModuleDialog::handleBackButton);
-    connect(ui->answerButton, &QPushButton::clicked, this, &ModuleDialog::handleAnswerButton);
+    connect(ui->playButton, &QPushButton::clicked, this, &ModuleDialog::playCurrentWord);
+    connect(ui->nextButton, &QPushButton::clicked, this, &ModuleDialog::switchToNextWord);
+    connect(ui->backButton, &QPushButton::clicked, this, &ModuleDialog::switchToPreviousWorld);
+    connect(ui->answerButton, &QPushButton::clicked, this, &ModuleDialog::showAnswer);
 
-    handlePlayButton();
+    playCurrentWord();
 }
 
 ModuleDialog::~ModuleDialog()
 {
 }
 
-void ModuleDialog::handlePlayButton()
+void ModuleDialog::playCurrentWord()
 {
     auto module = jsonObject->value(QString::fromStdString(key)).toArray();
     if (module.size() == 0 or
@@ -56,34 +58,17 @@ void ModuleDialog::handlePlayButton()
     player->play();
 }
 
-void ModuleDialog::handleNextButton()
+void ModuleDialog::switchToNextWord()
 {
-    auto module = jsonObject->value(QString::fromStdString(key)).toArray();
-    if (currentWord >= module.size())
-    {
-
-    }
-
-    ++currentWord;
-    handlePlayButton();
-    ui->answerLabel->setText("");
-    ui->answerText->clear();
+    switchWord(kNext);
 }
 
-void ModuleDialog::handleBackButton()
+void ModuleDialog::switchToPreviousWorld()
 {
-    if (currentWord <= 0)
-    {
-        return;
-    }
-
-    --currentWord;
-    handlePlayButton();
-    ui->answerLabel->setText("");
-    ui->answerText->clear();
+    switchWord(kBack);
 }
 
-void ModuleDialog::handleAnswerButton()
+void ModuleDialog::showAnswer()
 {
     auto module = jsonObject->value(QString::fromStdString(key)).toArray();
     if (module.size() == 0 or
@@ -94,4 +79,25 @@ void ModuleDialog::handleAnswerButton()
 
     auto answer = module[currentWord].toObject().value("expression").toString();
     ui->answerLabel->setText(answer);
+}
+
+void ModuleDialog::switchWord(int step)
+{
+    currentWord += step;
+
+    auto module = jsonObject->value(QString::fromStdString(key)).toArray();
+    if (currentWord >= module.size() or
+        currentWord < 0)
+    {
+        return;
+    }
+
+    playCurrentWord();
+    ui->answerLabel->setText("");
+    ui->answerText->clear();
+}
+
+bool ModuleDialog::isWordOutOfScope()
+{
+    return false;
 }

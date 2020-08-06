@@ -25,10 +25,14 @@ public:
     ~ModuleDialog();
 
 public slots:
-    void handlePlayButton();
-    void handleNextButton();
-    void handleBackButton();
-    void handleAnswerButton();
+    void playCurrentWord();
+    void switchToNextWord();
+    void switchToPreviousWorld();
+    void showAnswer();
+
+private:
+    void switchWord(int step);
+    bool isWordOutOfScope();
 
 private:
     std::unique_ptr<Ui::ModuleDialog> ui;
